@@ -30,7 +30,7 @@
     "@types/node": "^22.15.29",
     "@types/pg": "^8.15.4",
     "@types/pino": "^7.0.5",
-    "drizzle-kit": "^0.31.1",
+    "drizzle-kit": "^0.31.2",
     "tsx": "^4.20.3"
   }
 }
