@@ -11,16 +11,16 @@ class FastifyProvider {
 
     private constructor() {}
 
-    static getInstance(): FastifyProvider {
+    static async getInstance(): Promise<FastifyProvider> {
         if (!FastifyProvider.instance) {
             FastifyProvider.instance = new FastifyProvider()
-            FastifyProvider.instance.createServer()
+            await FastifyProvider.instance.createServer()
         }
         
         return FastifyProvider.instance
     }
 
-    private createServer() {
+    private async createServer() {
         try {
             const app = fastify({ 
                 loggerInstance: logger
@@ -38,12 +38,11 @@ class FastifyProvider {
         }
     }
 
-    static getServerInstace() {
-        if (!FastifyProvider.serverInstace) {
+    static getServerInstance() {
+        if (!this.serverInstace) {
             throw new Error('FastifyProvider connection not initialized.')
         }
-
-        return FastifyProvider.serverInstace
+        return this.serverInstace
     }
 }
 

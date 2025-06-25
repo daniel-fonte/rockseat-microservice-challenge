@@ -5,8 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1750805974312,
-      "tag": "20250624225934_create_orders_table",
+      "when": 1750806832783,
+      "tag": "20250624231352_create_orders_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750807310167,
+      "tag": "20250624232150_change_updated_at_column",
       "breakpoints": true
     }
   ]

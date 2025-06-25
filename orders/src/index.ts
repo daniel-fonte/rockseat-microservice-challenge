@@ -1,10 +1,18 @@
 import RabbitMqProvider from "./providers/rabbitmq/index.ts";
 import DrizzleOrmProvider from "./providers/drizzleOrm/index.ts";
 import { server } from "./http/index.ts";
+import FastifyProvider from "./providers/fastifyProvider/index.ts";
 
-DrizzleOrmProvider.getInstace().then(() => {
-    RabbitMqProvider.getInstance().then(() => {
-        server.initialize()
-    })
-})
+async function bootstrap() {
+    await FastifyProvider.getInstance()
+
+    await DrizzleOrmProvider.getInstace()
+
+    await RabbitMqProvider.getInstance()
+
+    
+    await server.initialize()
+}
+
+bootstrap()
 

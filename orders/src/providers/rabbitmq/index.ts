@@ -1,10 +1,11 @@
-import amqp, { ChannelModel } from 'amqplib'
+import amqp, { ChannelModel, Channel } from 'amqplib'
 import { logger } from '../logger/index.ts'
 import { ENV } from '../../env.ts'
 
 class RabbitMqProvider {
     private static instance: RabbitMqProvider | null = null
     private static connection: ChannelModel | null = null
+    private static channel: Channel | null = null
 
     private constructor() {}
 
@@ -20,7 +21,9 @@ class RabbitMqProvider {
     private async connect() {
         try {
             const conn = await amqp.connect(ENV.BROKER_URL)
+            const channel = await conn.createChannel()
             RabbitMqProvider.connection = conn
+            RabbitMqProvider.channel = channel
             logger.info('Broker connected.')
         } catch (error) {
             logger.error('Broker not connected.', error)
@@ -34,6 +37,11 @@ class RabbitMqProvider {
         }
 
         return RabbitMqProvider.connection
+    }
+
+    static getChannel(): Channel {
+        if (!this.channel) throw new Error('RabbitMQ channel not initialized.')
+        return this.channel
     }
 }
 

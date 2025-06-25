@@ -1,5 +1,5 @@
-import { orders } from "./orders.ts";
+import { getOrdersChannel } from "./orders.ts";
 
 export const channels = {
-    orders
+    getOrdersChannel
 }

@@ -4,6 +4,6 @@ import { timestamps } from './columns.helpers.ts';
 export const ordersTable = pgTable('Orders', {
     id: uuid().defaultRandom().primaryKey(),
     customerId: uuid().notNull(),
-    amount: numeric(),
+    amount: numeric({ mode: 'number' }),
     ...timestamps
 }) 
