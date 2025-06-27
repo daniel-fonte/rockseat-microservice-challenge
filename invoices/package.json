@@ -2,23 +2,32 @@
   "name": "invoices",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch --env-file=.env  src/index.ts",
+    "worker:order": "tsx watch --env-file=.env src/workers/ordersWorker.ts",
     "start": "node --experimental-strip-types --no-warnings src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@fastify/cors": "^11.0.1",
-    "fastify": "^5.3.3",
-    "fastify-type-provider-zod": "^4.0.2",
-    "typescript": "^5.8.3",
-    "zod": "^3.25.51"
+    "@tsconfig/node22": "^22.0.2",
+    "amqplib": "^0.10.8",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.44.2",
+    "pg": "^8.16.2",
+    "pino": "^9.7.0",
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.7",
     "@types/node": "^22.15.29",
-    "tsx": "^4.19.4"
+    "@types/pg": "^8.15.4",
+    "@types/pino": "^7.0.5",
+    "drizzle-kit": "^0.31.2",
+    "tsx": "^4.20.3"
   }
 }
