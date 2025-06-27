@@ -3,6 +3,7 @@ import { CreateOrderInput } from "../schemas/orderSchema.ts"
 import { channels } from "../../providers/rabbitmq/channels/index.ts"
 import { ordersTable } from "../../database/schemas/order.ts"
 import DrizzleOrmProvider from "../../providers/drizzleOrm/index.ts"
+import OrderPublishService from "../../services/OrderPublishService.ts"
 
 class orderController {
 
@@ -18,12 +19,8 @@ class orderController {
             const orderSaved = await DrizzleOrmProvider.getConnection().insert(ordersTable).values(orderToSave).returning({ insertedId: ordersTable.id });
 
             request.log.info(`Order ${orderSaved[0].insertedId} stored on database`)
-
-            const orderChannel = await channels.getOrdersChannel()
-
-            orderChannel.sendToQueue('orders', Buffer.from(JSON.stringify({ customerId: payload.customerId, orderId: orderSaved[0].insertedId })))
-
-            request.log.info(`Order ${orderSaved[0].insertedId} published on orders queue`)
+            
+            await OrderPublishService.execute({ customerId: payload.customerId, orderId: orderSaved[0].insertedId })
 
             reply.status(201).send()
         } catch (error) {
