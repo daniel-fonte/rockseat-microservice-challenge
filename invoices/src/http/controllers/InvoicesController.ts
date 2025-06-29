@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import DrizzleOrmProvider from "../../providers/drizzleOrm/index.ts"
-import { IOrderCreatedMessage } from '../../../../interfaces/messages/IOrderCreatedMessage.ts'
 import ListAllInvoicesService from "../../services/ListAllInvoicesService.ts"
+import { trace } from '@opentelemetry/api'
 
 class InvoicesController {
 
@@ -10,7 +9,9 @@ class InvoicesController {
             const service = new ListAllInvoicesService()
 
             const invoices = await service.execute()
-            
+
+            trace.getActiveSpan()?.setAttribute('invoices', JSON.stringify(invoices))
+
             reply.status(200).send(invoices)
         } catch (error) {
             console.error(error)
