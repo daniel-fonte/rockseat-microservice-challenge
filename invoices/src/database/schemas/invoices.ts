@@ -1,9 +1,9 @@
-import { numeric, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, uuid } from 'drizzle-orm/pg-core';
 import { timestamps } from './columns.helpers.ts';
 
-export const ordersTable = pgTable('Orders', {
+export const invoicesTable = pgTable('Invoices', {
     id: uuid().defaultRandom().primaryKey(),
     customerId: uuid().notNull(),
-    amount: numeric({ mode: 'number' }),
+    orderId: uuid().notNull(),
     ...timestamps
 }) 

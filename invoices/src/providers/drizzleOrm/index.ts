@@ -22,7 +22,7 @@ class DrizzleOrmProvider {
         try {
             const pool = new Pool({
                 connectionString: ENV.DATABASE_URL,
-                application_name: 'orders_service',
+                application_name: 'invoices_service',
                 max: 5
             })
 

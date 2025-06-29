@@ -20,7 +20,7 @@ class OrdersController {
                 customerId: payload.customerId
             }
 
-            const orderSaved = await DrizzleOrmProvider.getConnection().insert(ordersTable).values(orderToSave).returning({ insertedId: ordersTable.id });
+            const orderSaved = await DrizzleOrmProvider.getConnection().insert(ordersTable).values(orderToSave).returning({ insertedId: ordersTable.id })
 
             request.log.info(`Order ${orderSaved[0].insertedId} stored on database`)
 

@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1751165981449,
+      "tag": "20250629025941_create_invoices_table",
+      "breakpoints": true
+    }
+  ]
+}
