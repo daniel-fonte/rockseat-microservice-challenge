@@ -1,14 +1,18 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { CreateOrderInput } from "../schemas/orderSchema.ts"
-import { channels } from "../../providers/rabbitmq/channels/index.ts"
 import { ordersTable } from "../../database/schemas/order.ts"
 import DrizzleOrmProvider from "../../providers/drizzleOrm/index.ts"
-import OrderPublishService from "../../services/OrderPublishService.ts"
+import RabbitMqPublishFactory from "../../factories/RabbitMqPublishFactory.ts"
+import { IOrderCreatedMessage } from '../../../../interfaces/messages/IOrderCreatedMessage.ts'
 
-class orderController {
+class OrdersController {
 
     async store(request: FastifyRequest<{ Body: CreateOrderInput }>, reply: FastifyReply) {
         try {
+            const factory = new RabbitMqPublishFactory<IOrderCreatedMessage>('orders')
+
+            const servicePublish = await factory.create()
+
             const payload = request.body
 
             const orderToSave: typeof ordersTable.$inferInsert = {
@@ -19,9 +23,9 @@ class orderController {
             const orderSaved = await DrizzleOrmProvider.getConnection().insert(ordersTable).values(orderToSave).returning({ insertedId: ordersTable.id });
 
             request.log.info(`Order ${orderSaved[0].insertedId} stored on database`)
-            
-            await OrderPublishService.execute({ customerId: payload.customerId, orderId: orderSaved[0].insertedId })
 
+            await servicePublish.execute({ customerId: payload.customerId, orderId: orderSaved[0].insertedId })
+            
             reply.status(201).send()
         } catch (error) {
             console.error(error)
@@ -30,4 +34,4 @@ class orderController {
 
 }
 
-export default new orderController()
+export default OrdersController
