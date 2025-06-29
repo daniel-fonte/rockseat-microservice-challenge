@@ -4,6 +4,7 @@ import { ordersTable } from "../../database/schemas/order.ts"
 import DrizzleOrmProvider from "../../providers/drizzleOrm/index.ts"
 import RabbitMqPublishFactory from "../../factories/RabbitMqPublishFactory.ts"
 import { IOrderCreatedMessage } from '../../../../interfaces/messages/IOrderCreatedMessage.ts'
+import { trace } from '@opentelemetry/api'
 
 class OrdersController {
 
@@ -26,6 +27,8 @@ class OrdersController {
 
             await servicePublish.execute({ customerId: payload.customerId, orderId: orderSaved[0].insertedId })
             
+            trace.getActiveSpan()?.setAttribute('order_id', orderSaved[0].insertedId)
+
             reply.status(201).send()
         } catch (error) {
             console.error(error)
