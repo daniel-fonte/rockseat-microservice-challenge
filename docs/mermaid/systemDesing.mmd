@@ -1,0 +1,26 @@
+graph LR
+    Client[Client]
+
+    A[API Gateway]
+
+    subgraph Microservices
+        
+        B[Orders Service]
+        E[(Database)]
+
+        C[Invoices Service]
+        F[(Database)]    
+    end
+
+    D@{ shape: das, label: "Message Broker" }
+    
+    Client -.- A
+
+    A --> B
+    A --> C
+
+    B --> E
+    C --> F
+
+    B -.-> D
+    D -.-> C
