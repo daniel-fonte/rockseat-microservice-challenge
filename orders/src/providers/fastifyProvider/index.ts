@@ -1,9 +1,11 @@
 import fastify, { FastifyInstance } from 'fastify'
 import { logger } from '../logger/index.ts'
-import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod'
+import { serializerCompiler, validatorCompiler, ZodTypeProvider, jsonSchemaTransform } from 'fastify-type-provider-zod'
 import fastifyCors from '@fastify/cors'
 import { Server, IncomingMessage, ServerResponse } from 'http'
 import { Logger } from 'pino'
+import { fastifySwagger } from '@fastify/swagger'
+import { fastifySwaggerUi } from '@fastify/swagger-ui'
 
 class FastifyProvider {
     private static instance: FastifyProvider | null = null
@@ -30,6 +32,20 @@ class FastifyProvider {
             app.setValidatorCompiler(validatorCompiler)
 
             app.register(fastifyCors, { origin: '*' })
+            app.register(fastifySwagger, {
+                openapi: {
+                    info: {
+                        title: 'API de Exemplo',
+                        description: 'Documentação da API de exemplo utilizando Fastify',
+                        version: '3.0.0',
+                    },
+                },
+                transform: jsonSchemaTransform
+            })
+
+            app.register(fastifySwaggerUi, {
+                routePrefix: '/docs'
+            })
 
             FastifyProvider.serverInstace = app
         } catch (error) {

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { CreateOrderInput } from "../schemas/orderSchema.ts"
+import { CreateOrderBodyRequest } from "../schemas/OrderSchema.ts"
 import { ordersTable } from "../../database/schemas/order.ts"
 import DrizzleOrmProvider from "../../providers/drizzleOrm/index.ts"
 import RabbitMqPublishFactory from "../../factories/RabbitMqPublishFactory.ts"
@@ -8,7 +8,7 @@ import { trace } from '@opentelemetry/api'
 
 class OrdersController {
 
-    async store(request: FastifyRequest<{ Body: CreateOrderInput }>, reply: FastifyReply) {
+    async store(request: FastifyRequest<{ Body: CreateOrderBodyRequest }>, reply: FastifyReply) {
         try {
             const factory = new RabbitMqPublishFactory<IOrderCreatedMessage>('orders')
 
@@ -29,7 +29,7 @@ class OrdersController {
             
             trace.getActiveSpan()?.setAttribute('order_id', orderSaved[0].insertedId)
 
-            reply.status(201).send()
+            reply.status(201).send({ orderId: orderSaved[0].insertedId })
         } catch (error) {
             console.error(error)
         }
